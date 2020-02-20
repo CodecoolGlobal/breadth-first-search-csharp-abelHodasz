@@ -58,9 +58,11 @@ namespace BFS_c_sharp
             return new UserNode(GetRandomElement(firstNames), GetRandomElement(lastNames));
         }
 
+
         private string GetRandomElement(string[] array)
         {
             return array[rng.Next(array.Length)];
         }        
+
     }
 }
