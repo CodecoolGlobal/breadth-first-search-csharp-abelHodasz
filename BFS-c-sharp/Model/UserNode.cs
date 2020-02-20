@@ -39,25 +39,14 @@ namespace BFS_c_sharp.Model
         public static int DistanceBetweenUsers(UserNode user1, UserNode user2)
         {
             Queue<UserNode> userQueue = new Queue<UserNode>();
+            HashSet<UserNode> lookedAt = new HashSet<UserNode>() { user1 };
             userQueue.Enqueue(user1);
             int distance = 1;
-            while(userQueue.Count != 0)
+            while (userQueue.Count != 0)
             {
-                var dequeued = userQueue.Dequeue();
-                Console.WriteLine(dequeued.FirstName +" " +  dequeued.LastName);
-                Console.WriteLine("Distance: "+ distance +" ,Friends: ");
-                foreach (var user in dequeued.Friends)
-                {
-                    Console.WriteLine("- "+user.FirstName + " " + user.LastName + ", Id:" + user.Id );
-                    if (user.Id != dequeued.Id)
-                    {
-                        if (user.Id == user2.Id) return distance;
-                        else
-                        {
-                            userQueue.Enqueue(user);
-                        }
-                    }
-                }
+                Console.WriteLine("Distance: " + distance);
+                userQueue = GetFriends(userQueue, lookedAt);
+                if (userQueue.Contains(user2)) return distance;
                 distance++;
             }
             return -1;
@@ -67,21 +56,45 @@ namespace BFS_c_sharp.Model
         {
             Queue<UserNode> userQueue = new Queue<UserNode>();
             userQueue.Enqueue(this);
+            HashSet<UserNode> lookedAt = new HashSet<UserNode>() { this };
 
-            HashSet<UserNode> friendsOfFriends = new HashSet<UserNode>();
+            for(int i = 0; i< distance; i++)
+            {
+                userQueue = GetFriends(userQueue, lookedAt);
+            }
 
-
-
-            throw new NotImplementedException();
+            return new HashSet<UserNode>(userQueue);
         }
 
 
 
         static List<List<UserNode>> ShortestPathBetweenUsers(UserNode user1, UserNode user2)
         {
-            Queue<UserNode> userQueue = new Queue<UserNode>();
-
             throw new NotImplementedException();
+        }
+
+        static Queue<UserNode> GetFriends(Queue<UserNode> users, HashSet<UserNode> lookedAt)
+        {
+            Queue<UserNode> newQueue = new Queue<UserNode>();
+
+            while (users.Count != 0)
+            {
+                var dequeued = users.Dequeue();
+                lookedAt.Add(dequeued);
+                Console.WriteLine(dequeued.FirstName + " " + dequeued.LastName);
+                Console.WriteLine("Friends: ");
+                foreach (var user in dequeued.Friends)
+                {
+                    if (!lookedAt.Contains(user))
+                    {
+                        Console.WriteLine("- " + user.FirstName + " " + user.LastName + ", Id:" + user.Id);
+                        newQueue.Enqueue(user);
+
+                    }
+                }
+            }
+
+            return newQueue;
         }
     }
 }
