@@ -44,7 +44,6 @@ namespace BFS_c_sharp.Model
             int distance = 1;
             while (userQueue.Count != 0)
             {
-                Console.WriteLine("Distance: " + distance);
                 userQueue = GetFriends(userQueue, lookedAt);
                 if (userQueue.Contains(user2)) return distance;
                 distance++;
@@ -81,15 +80,12 @@ namespace BFS_c_sharp.Model
             {
                 var dequeued = users.Dequeue();
                 lookedAt.Add(dequeued);
-                Console.WriteLine(dequeued.FirstName + " " + dequeued.LastName);
-                Console.WriteLine("Friends: ");
+
                 foreach (var user in dequeued.Friends)
                 {
                     if (!lookedAt.Contains(user))
                     {
-                        Console.WriteLine("- " + user.FirstName + " " + user.LastName + ", Id:" + user.Id);
                         newQueue.Enqueue(user);
-
                     }
                 }
             }
